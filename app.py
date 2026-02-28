@@ -473,39 +473,40 @@ def run_pipeline(
 
     log_message(logs, f"Saved outputs to: output_dir")
 
-    return 
-        "output_dir": output_dir,
-        "linear_master": linear_master,
-        "final_processed": final_processed,
-        "stretched": stretched,
-        "before_preview": postprocess.normalize_for_preview(registered[0]),
-        "after_preview": final_processed,
-        "alignment_overlay": build_alignment_overlay(registered[0], registered[-1]),
-        "alignment_summary": align_summary,
-        "snr_improvement": snr_gain,
-        "plate_scale_aspp": plate_scale_aspp,
-        "fov_x_arcmin": fov_x_arcmin,
-        "fov_y_arcmin": fov_y_arcmin,
-        "raw_reference": reference.data,
-        "calibrated_reference": calibrated_for_inspector[0] if calibrated_for_inspector else reference.data,
-        "width": w,
-        "height": h,
-        "logs": logs,
-        "errors": errors,
-        "report": report,
-        "photometry_frames": registered,
-        "photometry_dates": [f.date_obs for f in lights],
-        "output_files": 
-            "linear_master.fits": linear_master_fits_path,
-            "stretched_master_16bit.tiff": stretched_tiff_path,
-            "stretched_master_preview.png": stretched_png_path,
-            "final_processed_16bit.tiff": final_tiff_path,
-            "final_processed_preview.png": final_png_path,
-            "processing_report.json": report_json_path,
-            "processing_report.txt": report_text_path,
-            "processing.log": log_path,
-        ,
-    
+    return {
+    "output_dir": output_dir,
+    "linear_master": linear_master,
+    "final_processed": final_processed,
+    "stretched": stretched,
+    "before_preview": postprocess.normalize_for_preview(registered[0]),
+    "after_preview": final_processed,
+    "alignment_overlay": build_alignment_overlay(registered[0], registered[-1]),
+    "alignment_summary": align_summary,
+    "snr_improvement": snr_gain,
+    "plate_scale_aspp": plate_scale_aspp,
+    "fov_x_arcmin": fov_x_arcmin,
+    "fov_y_arcmin": fov_y_arcmin,
+    "raw_reference": reference.data,
+    "calibrated_reference": calibrated_for_inspector[0] if calibrated_for_inspector else reference.data,
+    "width": w,
+    "height": h,
+    "logs": logs,
+    "errors": errors,
+    "report": report,
+    "photometry_frames": registered,
+    "photometry_dates": [f.date_obs for f in lights],
+
+    "output_files": {
+        "linear_master.fits": linear_master_fits_path,
+        "stretched_master_16bit.tiff": stretched_tiff_path,
+        "stretched_master_preview.png": stretched_png_path,
+        "final_processed_16bit.tiff": final_tiff_path,
+        "final_processed_preview.png": final_png_path,
+        "processing_report.json": report_json_path,
+        "processing_report.txt": report_text_path,
+        "processing.log": log_path,
+    },
+}
 
 
 def main() -> None:
