@@ -695,7 +695,7 @@ def main() -> None:
     metrics_cols[1].metric("Alignment RMS (px)", f"mean_rms:.3f" if np.isfinite(mean_rms) else "N/A")
     metrics_cols[2].metric("SNR improvement", f"xresult['snr_improvement']:.2f")
     plate_scale_label = f"result['plate_scale_aspp']:.3f" if result["plate_scale_aspp"] else "N/A"
-    metrics_cols[3].metric("Plate scale ("/px)", plate_scale_label)
+    metrics_cols[3].metric("Plate scale (arcsec/pixel)", plate_scale_label)
 
     if result["fov_x_arcmin"] and result["fov_y_arcmin"]:
         st.caption(f"FOV estimate: result['fov_x_arcmin']:.2f' x result['fov_y_arcmin']:.2f'")
