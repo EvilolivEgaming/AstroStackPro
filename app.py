@@ -394,41 +394,50 @@ def run_pipeline(
     iio.imwrite(stretched_png_path, postprocess.to_uint8(stretched))
     iio.imwrite(final_png_path, postprocess.to_uint8(final_processed))
 
-    report = 
-        "created_utc": datetime.utcnow().isoformat() + "Z",
-        "pipeline": "AstroStack Pro",
-        "settings": asdict(settings),
-        "inputs": [fits_io.json_ready_header_subset(f) for f in lights],
-        "counts": 
-            "lights": len(lights),
-            "bias": len(bias_candidates),
-            "dark": len(dark_candidates),
-            "flat": len(flat_candidates),
-        ,
-        "alignment": 
-            "summary": align_summary,
-            "per_frame": [asdict(m) for m in align_metrics],
-        ,
-        "integration": 
-            "method": settings.stack_method,
-            "weights": weights.tolist(),
-            "stats": integrate_stats,
-        ,
-        "metrics": 
-            "snr_improvement_factor": snr_gain,
-            "plate_scale_arcsec_per_px": plate_scale_aspp,
-            "fov_arcmin": "x": fov_x_arcmin, "y": fov_y_arcmin,
-        ,
-        "errors": errors,
-        "logs": logs,
-        "outputs": 
-            "linear_master_fits": str(linear_master_fits_path),
-            "stretched_tiff_16bit": str(stretched_tiff_path),
-            "stretched_png_preview": str(stretched_png_path),
-            "final_tiff_16bit": str(final_tiff_path),
-            "final_png_preview": str(final_png_path),
-        ,
-    
+    report = {
+    "created_utc": datetime.utcnow().isoformat() + "Z",
+    "pipeline": "AstroStack Pro",
+    "settings": asdict(settings),
+    "inputs": [fits_io.json_ready_header_subset(f) for f in lights],
+
+    "counts": {
+        "lights": len(lights),
+        "bias": len(bias_candidates),
+        "dark": len(dark_candidates),
+        "flat": len(flat_candidates),
+    },
+
+    "alignment": {
+        "summary": align_summary,
+        "per_frame": [asdict(m) for m in align_metrics],
+    },
+
+    "integration": {
+        "method": settings.stack_method,
+        "weights": weights.tolist(),
+        "stats": integrate_stats,
+    },
+
+    "metrics": {
+        "snr_improvement_factor": snr_gain,
+        "plate_scale_arcsec_per_px": plate_scale_aspp,
+        "fov_arcmin": {
+            "x": fov_x_arcmin,
+            "y": fov_y_arcmin,
+        },
+    },
+
+    "errors": errors,
+    "logs": logs,
+
+    "outputs": {
+        "linear_master_fits": str(linear_master_fits_path),
+        "stretched_tiff_16bit": str(stretched_tiff_path),
+        "stretched_png_preview": str(stretched_png_path),
+        "final_tiff_16bit": str(final_tiff_path),
+        "final_png_preview": str(final_png_path),
+    },
+}
 
     fits_io.save_json(report_json_path, report)
 
