@@ -12,23 +12,3 @@ imageio>=2.34
 matplotlib>=3.8
 streamlit-image-coordinates>=0.1.9
 Pillow>=10.0
-
-
-
-python3.11 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-streamlit run app.py
-
-
-
-py -3.11 -m venv .venv
-.venv.ps1
-pip install -r requirements.txt
-streamlit run app.py
-
-
-py -3.11 -m venv .venv
-.venv.bat
-pip install -r requirements.txt
-streamlit run app.py
