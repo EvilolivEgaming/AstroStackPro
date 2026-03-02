@@ -77,7 +77,7 @@ def is_supported_name(name: str) -> bool:
 
 def log_message(logs: list[str], message: str) -> None:
     ts = datetime.now().strftime("%H:%M:%S")
-    logs.append(f"[ts] message")
+    logs.append(f"[{ts}] {message}")
 
 
 def load_frames_from_uploads(uploaded_files) -> tuple[list[fits_io.FitsFrame], list[str]]:
@@ -163,7 +163,7 @@ def _format_value(val) -> str:
     if val is None:
         return "N/A"
     try:
-        return f"float(val):.6g"
+        return f"{float(val):.6g}"
     except Exception:
         return str(val)
 
@@ -640,8 +640,13 @@ def main() -> None:
         frame_table,
         hide_index=True,
         num_rows="fixed",
-        column_config=
+        column_config={
             "assigned_type": st.column_config.SelectboxColumn(
+                "assigned_type",
+                options=list(fits_io.FRAME_TYPES),
+                required=True,
+            )
+        },
                 "assigned_type",
                 options=list(fits_io.FRAME_TYPES),
                 required=True,
@@ -700,12 +705,25 @@ def main() -> None:
 
     st.subheader("3) Output Summary")
     metrics_cols = st.columns(4)
-    metrics_cols[0].metric("Frames stacked", len(selected_lights))
-    mean_rms = result["alignment_summary"].get("mean_rms_px", float("nan"))
-    metrics_cols[1].metric("Alignment RMS (px)", f"mean_rms:.3f" if np.isfinite(mean_rms) else "N/A")
-    metrics_cols[2].metric("SNR improvement", f"xresult['snr_improvement']:.2f")
-    plate_scale_label = f"result['plate_scale_aspp']:.3f" if result["plate_scale_aspp"] else "N/A"
-    metrics_cols[3].metric("Plate scale (arcsec/pixel)", plate_scale_label)
+metrics_cols[0].metric("Frames stacked", len(selected_lights))
+
+mean_rms = result["alignment_summary"].get("mean_rms_px", float("nan"))
+metrics_cols[1].metric(
+    "Alignment RMS (px)",
+    f"{mean_rms:.3f}" if np.isfinite(mean_rms) else "N/A"
+)
+
+metrics_cols[2].metric(
+    "SNR improvement",
+    f"x{result['snr_improvement']:.2f}"
+)
+
+plate_scale_label = (
+    f"{result['plate_scale_aspp']:.3f}"
+    if result["plate_scale_aspp"] is not None
+    else "N/A"
+)
+metrics_cols[3].metric("Plate scale (arcsec/pixel)", plate_scale_label)
 
     if result["fov_x_arcmin"] and result["fov_y_arcmin"]:
         st.caption(f"FOV estimate: result['fov_x_arcmin']:.2f' x result['fov_y_arcmin']:.2f'")
